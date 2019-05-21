@@ -1,0 +1,3 @@
+<% for(model of models){ %>
+export * from './<%= model.name %>';
+<% } %>

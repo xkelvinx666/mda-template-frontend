@@ -1,0 +1,7 @@
+<% for(field of model.fields){ %>
+<% if (field.content.isId !== 'true') { %>
+export const <%= field.name %> = {
+  <%- $imports.toJson(field.content) %>
+}
+<% } %>
+<% } %>

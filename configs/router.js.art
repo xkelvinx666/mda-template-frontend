@@ -1,0 +1,13 @@
+export const sidebarRoutes = [
+  <% for(model of models){ %>
+  {
+    name: '<%= model.name %>',
+    path: '/<%= model.name %>',
+    icon: '<%= model.path %>'
+  },
+  <% } %>
+]
+
+export default {
+  routes: [...sidebarRoutes]
+}

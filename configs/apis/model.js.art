@@ -1,0 +1,48 @@
+import axios from '@/plugins/axios'
+<% const capitalizeName = $imports.capitalize(model.name); %>
+const URI = '<%= model.name %>s'
+
+export function get<%= capitalizeName %>({ data = {}, query = {} }) {
+  return Promise.all([
+    axios.get(URI, {
+      params: {
+        filter: {
+          where: data,
+          limit: query.limit,
+          offset: query.offset
+        }
+      }
+    }),
+    axios.get(`${URI}/count`, {
+      params: {
+        where: data
+      }
+    })
+  ]).then(([{ data: data1 }, { data: data2 }]) => {
+    return {
+      data: data1,
+      ...data2
+    }
+  })
+}
+
+export function get<%= capitalizeName %>ByFilter({ filter = {} }) {
+  return axios.get(URI, {
+    params: {
+      filter
+    }
+  })
+}
+
+export function post<%= capitalizeName %>({ data = {}, config = {} } = {}) {
+  return axios.post(URI, data, config)
+}
+
+export function put<%= capitalizeName %>({ params = {}, data = {}, config = {} } = {}) {
+  return axios.put(`${URI}/${params.id}`, {...data, id: undefined}, config)
+}
+
+export function delete<%= capitalizeName %>({ params = {}, config = {} } = {}) {
+  return axios.delete(`${URI}/${params.id}`, config)
+}
+

@@ -1,0 +1,110 @@
+<template>
+  <responsive-height-card is-padding-content>
+    <template-query slot="header" :configs="configs" @query="fetchData">
+      <button-dialog-form
+        slot="extra-buttons"
+        btn-text="新建"
+        btn-type="default"
+        title="新建"
+        :configs="configs"
+        @submit="handleCreate"
+      />
+    </template-query>
+    <a-spin :spinning="isLoading">
+      <template-table :datas="datas" :configs="configs">
+        <template>
+          <a-table-column title="编辑">
+            <template slot-scope="row">
+              <button-dialog-form
+                btn-text="编辑"
+                btn-type="text"
+                title="编辑"
+                :data="row"
+                :configs="configs"
+                @submit="handleUpdate"
+              />
+              <a href="javascript:void(0)" @click="handleDelete(row)">删除</a>
+            </template>
+          </a-table-column>
+        </template>
+      </template-table>
+    </a-spin>
+    <a-spin slot="footer" :spinning="isLoading">
+      <a-pagination
+        :value="currentPage"
+        :total="total"
+        :page-size="query.limit"
+        @change="handlePageChange"
+      />
+    </a-spin>
+  </responsive-height-card>
+</template>
+
+<script>
+import ResponsiveHeightCard from '@/components/layout/responsive-card/height'
+import TemplateTable from '@/components/template/table'
+import ButtonDialogForm from '@/components/template/button-dialog-form'
+import TemplateQuery from '@/components/template/query'
+import TableDataMixin from '@/modules/mixins/table-data'
+<% const fieldsName = model.fields.filter(({content}) => content.isId !== 'true').map(({name}) => name).join(',') %>
+import {<%= fieldsName %>} from '@/configs/fields/<%= model.name %>'
+import { isSet } from '@/modules/utils/set'
+<% const capitalizeName = $imports.capitalize(model.name); %>
+import { get<%= capitalizeName %>, post<%= capitalizeName %>, put<%= capitalizeName %>, delete<%= capitalizeName %> } from '@/configs/apis'
+
+export default {
+  name: 'PageModel',
+  components: {
+    ButtonDialogForm,
+    TemplateQuery,
+    TemplateTable,
+    ResponsiveHeightCard
+  },
+  mixins: [TableDataMixin],
+  data() {
+    return {
+      configs: [
+        <%= fieldsName %>
+      ]
+    }
+  },
+  methods: {
+    async fetchData(params = this.params, query = this.query) {
+      const data = await get<%= capitalizeName %>({
+        data: params,
+        query
+      })
+      if (data && data.data) {
+        // count有可能为undefined
+        this.total = isSet(data.count) ? data.count : this.total
+        this.datas = data.data
+      }
+    },
+    async handleCreate(params) {
+      const { data } = await post<%= capitalizeName %>({
+        data: params
+      })
+      if (data) {
+        this.handleTableChange()
+      }
+    },
+    async handleUpdate(params) {
+      await put<%= capitalizeName %>({
+        params: {
+          id: params.id
+        },
+        data: params
+      })
+      this.handleTableChange()
+    },
+    async handleDelete(params) {
+      await delete<%= capitalizeName %>({
+        params: {
+          id: params.id
+        }
+      })
+      this.handleTableChange()
+    }
+  }
+}
+</script>
