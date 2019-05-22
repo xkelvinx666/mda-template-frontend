@@ -1,7 +1,7 @@
 pipeline {
   agent {
     docker {
-      image 'node'
+      image 'node:alpine'
       args '''
 '''
     }
@@ -11,13 +11,11 @@ pipeline {
     stage('git pull') {
       steps {
         git branch: 'master',
-        credentialsId: 'b2ec09ae-ca45-4884-8b8b-bd65d3e43475',
         url: 'https://github.com/xkelvinx666/mda-backend-render'
         dir(path: './template') {
           git (
             branch: 'master',
-            credentialsId: 'b2ec09ae-ca45-4884-8b8b-bd65d3e43475',
-            url: 'https://github.com/xkelvinx666/mda-template'
+            url: 'https://github.com/xkelvinx666/mda-template-frontend'
           )
           sh """
               ls | grep -v frontend | xargs rm -rf
