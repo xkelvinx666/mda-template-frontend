@@ -22,9 +22,7 @@ pipeline {
     }
     stage('build') {
       steps {
-        sh 'cd ./render'
-        sh 'npm install'
-        sh 'npm run build'
+        sh 'cd ./ render && npm install && npm run build'
       }
     }
     stage('compile') {
