@@ -10,32 +10,31 @@ pipeline {
   stages {
     stage('git pull') {
       steps {
-        sh 'ls && pwd'
-        git branch: 'master',
-        url: 'https://github.com/xkelvinx666/mda-backend-render'
+        dir(path: './render') {
+          git branch: 'master',
+          url: 'https://github.com/xkelvinx666/mda-backend-render'
+        }
         dir(path: './template') {
-          sh 'ls && pwd'
-          git (
-            branch: 'master',
-            url: 'https://github.com/xkelvinx666/mda-template-frontend'
-          )
+          git branch: 'master',
+          url: 'https://github.com/xkelvinx666/mda-template-frontend'
         }
       }
     }
     stage('build') {
       steps {
+        sh 'cd ./render'
         sh 'npm install'
         sh 'npm run build'
       }
     }
     stage('compile') {
       steps {
-        sh 'npm run template art ./template/mda-template-frontend 1'
+        sh 'npm run template art ../template 1'
       }
     }
     stage('before-publish') {
        steps {
-        sh 'tar -czvf frontend.tar ./template/mda-template-frontend'
+        sh 'tar -czvf frontend.tar ./template/*'
       }
     }
     stage('publish') {
