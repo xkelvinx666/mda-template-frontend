@@ -10,9 +10,11 @@ pipeline {
   stages {
     stage('git pull') {
       steps {
+        sh 'ls && pwd'
         git branch: 'master',
         url: 'https://github.com/xkelvinx666/mda-backend-render'
         dir(path: './template') {
+          sh 'ls && pwd'
           git (
             branch: 'master',
             url: 'https://github.com/xkelvinx666/mda-template-frontend'
