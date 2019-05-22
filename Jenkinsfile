@@ -17,9 +17,6 @@ pipeline {
             branch: 'master',
             url: 'https://github.com/xkelvinx666/mda-template-frontend'
           )
-          sh """
-              ls | grep -v frontend | xargs rm -rf
-          """
         }
       }
     }
@@ -31,12 +28,12 @@ pipeline {
     }
     stage('compile') {
       steps {
-        sh 'npm run template art ./template/frontend 1'
+        sh 'npm run template art ./template/mda-template-frontend 1'
       }
     }
     stage('before-publish') {
        steps {
-        sh 'tar -czvf frontend.tar ./template/frontend'
+        sh 'tar -czvf frontend.tar ./template/mda-template-frontend'
       }
     }
     stage('publish') {
