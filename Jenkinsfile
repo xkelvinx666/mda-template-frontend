@@ -26,7 +26,7 @@ pipeline {
     }
     stage('compile') {
       steps {
-        sh 'npm run template art ../template 1'
+        sh 'cd ./render && npm run template art ../template 1'
       }
     }
     stage('before-publish') {
