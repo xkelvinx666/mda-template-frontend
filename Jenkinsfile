@@ -5,7 +5,6 @@ pipeline {
       args '''
 '''
     }
-
   }
   stages {
     stage('git pull') {
@@ -22,7 +21,7 @@ pipeline {
     }
     stage('build') {
       steps {
-        sh 'cd ./ render && npm install && npm run build'
+        sh 'cd ./render && npm install && npm run build'
       }
     }
     stage('compile') {
