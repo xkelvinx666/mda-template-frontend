@@ -1,7 +1,9 @@
 def remote = [:]
+remote.name = 'tencent_cloud'
 remote.host = '118.89.52.145'
 remote.user = 'root'
 remote.password = 'Ai798998203'
+remote.allowAnyHosts = true
 
 pipeline {
   agent {
@@ -50,7 +52,7 @@ pipeline {
               sshTransfer(
                 cleanRemote: false,
                 excludes: '',
-                execCommand: 'tar -xzvf frontend.tar',
+                execCommand: '',
                 execTimeout: 120000,
                 flatten: false,
                 makeEmptyDirs: false,
