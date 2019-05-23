@@ -36,6 +36,11 @@ pipeline {
         sh 'cd ./render && npm run template art ../template 1'
       }
     }
+    stage('after-compile') {
+      steps {
+        sh 'cd ./template && npm install && npm run lint && npm run build'
+      }
+    }
     stage('before-publish') {
        steps {
         sh 'tar -czvf frontend.tar ./template/*'
@@ -72,7 +77,7 @@ pipeline {
     stage('after-publish') {
        steps {
         sshCommand remote: remote, command: "cd ~/template && tar -xzvf frontend.tar && rm -rf frontend && mv template frontend && rm frontend.tar"
-        sshCommand remote: remote, command: "cd ~/template/frontend && pm2 start npm -- run start"
+        sshCommand remote: remote, command: "cd ~/template/frontend && node -v && npm list && && pm2 start npm -- run start"
       }
     }
   }
