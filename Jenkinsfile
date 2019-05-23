@@ -76,9 +76,8 @@ pipeline {
     }
     stage('after-publish') {
        steps {
-        writeFile file: 'frontend.sh', text: 'node -v && npm list && cd ~/template/frontend && pm2 start npm -- run start'
         sshCommand remote: remote, command: "cd ~/template && tar -xzvf frontend.tar && rm -rf frontend && mv template frontend && rm frontend.tar"
-        sshScript remote: remote, script: 'frontend.sh'
+        sshCommand remote: remote, command: "cd ~/template && sh frontend.sh"
       }
     }
   }
