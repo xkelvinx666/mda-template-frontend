@@ -1,7 +1,12 @@
-const pkg = require('./package')
+const pkg = require('./package');
 
 module.exports = {
   mode: 'spa',
+
+  server: {
+    port: 3000,
+    host: '0.0.0.0',
+  },
 
   /*
    ** Headers of the page
@@ -11,9 +16,9 @@ module.exports = {
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: pkg.description }
+      { hid: 'description', name: 'description', content: pkg.description },
     ],
-    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }]
+    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
   },
 
   /*
@@ -37,7 +42,7 @@ module.exports = {
   modules: [
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
-    '@nuxtjs/proxy'
+    '@nuxtjs/proxy',
   ],
   /*
    ** Axios module configuration
@@ -46,29 +51,34 @@ module.exports = {
     // See https://github.com/nuxt-community/axios-module#options
   },
 
+  generate: {
+    routes: ['404']
+  },
+
   router: {
+    base: '/',
     parseQuery(query) {
       // 转换路径参数为json格式
-      const qs = require('qs')
+      const qs = require('qs');
       return JSON.parse(
         JSON.stringify(qs.parse(query), (key, value) => {
           if (typeof value === 'string' && !isNaN(value)) {
-            return parseInt(value)
+            return parseInt(value);
           } else {
-            return value
+            return value;
           }
-        })
-      )
-    }
+        }),
+      );
+    },
   },
 
   proxy: [
     [
       '/api',
       {
-        target: 'http://localhost:3001'
-      }
-    ]
+        target: 'http://127.0.0.1:3001',
+      },
+    ],
   ],
 
   /*
@@ -85,9 +95,9 @@ module.exports = {
           enforce: 'pre',
           test: /\.(js|vue)$/,
           loader: 'eslint-loader',
-          exclude: /(node_modules)/
-        })
+          exclude: /(node_modules)/,
+        });
       }
-    }
-  }
-}
+    },
+  },
+};
