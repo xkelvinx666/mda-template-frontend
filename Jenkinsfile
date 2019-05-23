@@ -1,3 +1,8 @@
+def remote = [:]
+remote.host = '118.89.52.145'
+remote.user = 'root'
+remote.password = 'Ai798998203'
+
 pipeline {
   agent {
     docker {
@@ -32,6 +37,7 @@ pipeline {
     stage('before-publish') {
        steps {
         sh 'tar -czvf frontend.tar ./template/*'
+        archiveArtifacts 'frontend.tar'
       }
     }
     stage('publish') {
@@ -50,7 +56,7 @@ pipeline {
                 makeEmptyDirs: false,
                 noDefaultExcludes: false,
                 patternSeparator: '[, ]+',
-                remoteDirectory: '/root/template',
+                remoteDirectory: 'template',
                 remoteDirectorySDF: false,
                 removePrefix: '',
                 sourceFiles: 'frontend.tar'
@@ -59,6 +65,12 @@ pipeline {
               useWorkspaceInPromotion: false,
               verbose: false
            )])
+      }
+    }
+    stage('after-publish') {
+       steps {
+        sshCommand remote: remote, command: "cd ~/template && tar -xzvf frontend.tar && mv template frontend"
+        sshCommand remote: remote, command: "cd ~/template/frontend && pm2 start npm -- run start"
       }
     }
   }
